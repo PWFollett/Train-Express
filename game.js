@@ -1,12 +1,14 @@
-//FIREBASE//
-
-
-
-
-
-
-
-//
+var firebaseConfig = {
+  apiKey: "AIzaSyBaBc0pAA8gJJa8OYTcXD88o9mCRmXAQ8I",
+  authDomain: "train-schedule-3b2da.firebaseapp.com",
+  databaseURL: "https://train-schedule-3b2da.firebaseio.com",
+  projectId: "train-schedule-3b2da",
+  storageBucket: "train-schedule-3b2da.appspot.com",
+  messagingSenderId: "429821443833",
+  appId: "1:429821443833:web:ef80946211d4bbad"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
 
@@ -16,9 +18,9 @@ var startTime = "";
 var frequency = 0;
 
 function currentTime() {
-  var current = moment().format('LT');
+  var current = moment().format('PF');
   $("#currentTime").html(current);
-  setTimeout(currentTime, 1000);
+  setTimeout(currentTime, 2000);
 };
 
 $(".form-field").on("keyup", function() {
@@ -30,13 +32,13 @@ $(".form-field").on("keyup", function() {
   sessionStorage.setItem("train", traintemp);
   sessionStorage.setItem("city", citytemp);
   sessionStorage.setItem("time", timetemp);
-  sessionStorage.setItem("freq", freqtemp);
+  sessionStorage.setItem("freque", freqtemp);
 });
 
 $("#train-name").val(sessionStorage.getItem("train"));
 $("#destination").val(sessionStorage.getItem("city"));
 $("#first-train").val(sessionStorage.getItem("time"));
-$("#frequency").val(sessionStorage.getItem("freq"));
+$("#frequency").val(sessionStorage.getItem("freque"));
 
 $("#submit").on("click", function(event) {
   event.preventDefault();
@@ -71,6 +73,7 @@ $("#submit").on("click", function(event) {
 });
 
 database.ref().on("child_added", function(childSnapshot) {
+  console.log(childSnapshot.val())
   var startTimeConverted = moment(childSnapshot.val().startTime, "hh:mm").subtract(1, "years");
   var timeDiff = moment().diff(moment(startTimeConverted), "minutes");
   var timeRemain = timeDiff % childSnapshot.val().frequency;
@@ -104,4 +107,4 @@ currentTime();
 
 setInterval(function() {
   window.location.reload();
-}, 60000);
+}, 10000);
